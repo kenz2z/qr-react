@@ -20,6 +20,21 @@ function App() {
   const classes = useStyles();
   const qrRef = useRef(null);
 
+  const [isShown, setIsShown] = useState(false);
+
+  const handleClick = event => {
+    // 👇️ toggle shown state
+    setIsShown(current => !current);
+  }
+
+  
+  const handleChange = (e) => {
+    setName("e.target.value");
+    console.log(name)
+  
+  
+  };
+
 
   const generateQrCode = async () => {
     try {
@@ -59,7 +74,7 @@ function App() {
       console.log("4: +"+URLe);
 
         setScanResultWebCam(URLe);
-
+        setIsShown(current => !current);
 
 
     }
@@ -70,9 +85,7 @@ function App() {
 
      //<ken add >
 
-  const handleChange = (e) => {
-      setName(e.target.value);
-    };
+
   
   const handleSumbit = (e) => {
     e.preventDefault();
@@ -115,7 +128,7 @@ function App() {
           <Card>
               <h2 className={classes.title}>Generate Download & Scan QR Code with React js</h2>
               <CardContent>
-                  <Grid container spacing={2}>
+                  {/* <Grid container spacing={2}>
                       <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
                           <TextField label="Enter Text Here" onChange={(e) => setText(e.target.value)}/>
                           <Button className={classes.btn} variant="contained" 
@@ -127,7 +140,7 @@ function App() {
                               <a href={imageUrl} download>
                                   <img src={imageUrl} alt="img"/>
                               </a>) : null}
-                      </Grid>
+                      </Grid> */}
                       {/* <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
                         <Button className={classes.btn} variant="contained" color="secondary" onClick={onScanFile}>Scan Qr Code</Button>
                         <QrReader
@@ -140,22 +153,33 @@ function App() {
                         />
                         <h3>Scanned Code: {scanResultFile}</h3>
                       </Grid> */}
-                      <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
+{/* 
+                  </Grid> */}
+              </CardContent>
+              <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
                          <h3>Qr Code Scan by Web Cam</h3>
+                     
+                        <input type='text' value={scanResultWebCam} ></input> <button onClick={handleClick}>show qr scran</button>
+                        
+                       
+                         {isShown && (
                          <QrReader
                          delay={300}
-                         style={{width: '100%'}}
+                         style={{width: '50%' ,height:'50%'}}
                          onError={handleErrorWebCam}
                          onScan={handleScanWebCam}
                         
                          />
-                         <h3>Scanned By WebCam Code: {scanResultWebCam}</h3>
+                         
+                         )}
+                         <br/>
+                         <button >submit</button>
+                          
+                         {/* //<h3>Scanned By WebCam Code: {scanResultWebCam}</h3> */}
                     
                       </Grid>
-                  </Grid>
-              </CardContent>
           </Card>
-          <div className="App">
+          {/* <div className="App">
 			<form
 				action="http://localhost/reactphp/server.php"
 				method="post"
@@ -166,7 +190,7 @@ function App() {
 					type="text"
 					id="name"
 					name="name"
-					// value={scanResultWebCam}
+					 value={name}
 					// onChange={(event) => handleChange(event)}
 				/>
 				<br />
@@ -175,12 +199,12 @@ function App() {
         {joke}
 			</form>
 			<h1>{result}</h1>
-		</div>
+		</div> */}
 
-    <div>
+    {/* <div>
 
   <button onClick={() =>{this.getTxn()}}>check API</button>
-    </div>
+    </div> */}
     </Container>
     
   );

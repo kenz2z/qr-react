@@ -8,7 +8,7 @@ import Ken from './Ken';
 ReactDOM.render(
   <React.StrictMode>
     <App />
-    <Ken/>
+    {/* <Ken/> */}
   </React.StrictMode>,
   document.getElementById('root')
 );
