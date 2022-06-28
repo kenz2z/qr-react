@@ -3,7 +3,10 @@ import {Container, Card, CardContent, makeStyles, Grid, TextField, Button} from 
 import QRCode from 'qrcode';
 import QrReader from 'react-qr-reader';
 import $ from "jquery";
-
+import icon from './img/group_1.png';
+import icon1 from './img/Image1.png';
+import backgroundImg from './img/headerPathMob2.png';
+import './App.css';
 
 
 function App() { 
@@ -18,8 +21,6 @@ function App() {
   //
   const [copySuccess, setCopySuccess] = useState('');
 
-  // your function to copy here
-  
     const copyToClipBoard = async copyMe => {
       try {
         await navigator.clipboard.writeText(copyMe);
@@ -28,7 +29,7 @@ function App() {
         setCopySuccess('Failed to copy!');
       }
     };
-  const classes = useStyles();
+  // const classes = useStyles();
   const qrRef = useRef(null);
 
   const [isShown, setIsShown] = useState(false);
@@ -38,15 +39,12 @@ function App() {
     setIsShown(current => !current);
   }
 
-  
   const handleChange = (e) => {
     setName(e.target.value);
     console.log(name)
   
   
   };
-
-
   const generateQrCode = async () => {
     try {
           const response = await QRCode.toDataURL(text);
@@ -54,17 +52,6 @@ function App() {
     }catch (error) {
       console.log(error);
     }
-  }
-  const handleErrorFile = (error) => {
-    console.log(error);
-  }
-  const handleScanFile = (result) => {
-      if (result) {
-          setScanResultFile(result);
-      }
-  }
-  const onScanFile = () => {
-    qrRef.current.openImageDialog();
   }
   const handleErrorWebCam = (error) => {
     console.log(error);
@@ -75,24 +62,17 @@ function App() {
       //for check it is ethereum address
       let ethAdd = result.slice(0,11);
       if(ethAdd=="ethereum:0x"){
-      console.log("chec@@@@@"+ethAdd)
-      console.log(result)
-      console.log("start")
       let URLe=result;
-      console.log("1:"+URLe)
-
+      
+      //extract  ethereum address remove ethereum:0xb794f5ea0ba39494ce839613fffba74279579268@2
       let split_string = URLe.split(":");
       split_string.shift();
-      console.log("2:"+split_string)
       URLe = split_string.toString();
       split_string = URLe.split("@");
-      console.log("3: +"+split_string);
       URLe = split_string[0].toString();
-      console.log("4:"+URLe.length);
-        
-        setScanResultWebCam(URLe);
-        if(URLe.length>=1){
-        setIsShown(current => !current);
+      setScanResultWebCam(URLe);
+      if(URLe.length>=1){
+      setIsShown(current => !current);
       }
     }else {
       setScanResultWebCam("not a valid ethereum address");
@@ -127,75 +107,28 @@ function App() {
       },
     });
    };
-   // ken add
-   const getJoke= () =>{
-		let baseURL='https://api.etherscan.io/api?module=account&action=tokennfttx&contractaddress=';
-		let contractAddress='0x7b8c062C9B8cbD756785E444FDcFCa79342a8Ee5';
-		let userAddress='&address=0xb3f678A06d688D0a90787914f94d051b445b50C3';
-		let block='&page=1&offset=100&startblock=0&endblock=27025780&sort=asc';
-		let API_KEY='MU7II9KNAHCJFU46FFD7PH5XVR6RY5I3RE';
-		let apiURL = baseURL +contractAddress+userAddress+block+API_KEY;
-		fetch(apiURL)
-		.then((response)=> response.json())
-		.then((data)=>{
-			let etherscanData = data.result;
-		console.log(etherscanData)
-		let sum=""
-			for (var key in etherscanData) {
-				if (etherscanData.hasOwnProperty(key)) {
-					console.log(key + " -> " + etherscanData[key].tokenID);
-					sum+=("blockNumber:"+etherscanData[key].blockNumber+"tokenID :"+etherscanData[key].tokenID+"<br>");
-				}
-			}
-			// setJoke(sum)
-		});
-	};
+  //  const myStyle={
+  //   backgroundImage:"url("+{backgroundImg}+")",
+  //           height:'100vh',
+  //           marginTop:'-70px',
+  //           fontSize:'50px',
+  //           backgroundSize: 'cover',
+  //           backgroundRepeat: 'no-repeat',
+  //           };
 
-  return (
-    <Container className={classes.conatiner}>
-          <Card>
-              {/* <h2 className={classes.title}>Generate Download & Scan QR Code with React js</h2> */}
-              <CardContent>
-                  {/* <Grid container spacing={2}>
-                      <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                          <TextField label="Enter Text Here" onChange={(e) => setText(e.target.value)}/>
-                          <Button className={classes.btn} variant="contained" 
-                            color="primary" onClick={() => generateQrCode()}>Generate</Button>
-                            <br/>
-                            <br/>
-                            <br/>
-                            {imageUrl ? (
-                              <a href={imageUrl} download>
-                                  <img src={imageUrl} alt="img"/>
-                              </a>) : null}
-                      </Grid> */}
-                      {/* <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                        <Button className={classes.btn} variant="contained" color="secondary" onClick={onScanFile}>Scan Qr Code</Button>
-                        <QrReader
-                          ref={qrRef}
-                          delay={300}
-                          style={{width: '100%'}}
-                          onError={handleErrorFile}
-                          onScan={handleScanFile}
-                          legacyMode
-                        />
-                        <h3>Scanned Code: {scanResultFile}</h3>
-                      </Grid> */}
-{/* 
-                  </Grid> */}
-              </CardContent>
-              <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                         <h3>Wallet address Qr Code Scan </h3>
-                     
-                        <input type='text' value={scanResultWebCam} ></input> <button onClick={handleClick}>show qr scran</button>
-                        <Button onClick={() => copyToClipBoard(scanResultWebCam)}>
-                        Click here to copy
-                        </Button>
-                       
+  return (   
+    
+    <div className="App"style={{ backgroundImage:`url(${backgroundImg})`,
+    backgroundRepeat: 'no-repeat', }} >
+      {/* <button className="btn">buy now</button> */}
+         <img src={icon1} className="img.w"/>
+         <br/>
+                        {/* <input type='text' value={scanResultWebCam} ></input> */}
+                         <button onClick={handleClick}  ><img src={icon}/></button>
                          {isShown && (
                          <QrReader
                          delay={300}
-                         style={{width: '50%' ,height:'50%'}}
+                         style={{width: '100%' ,height:'100%'}}
                          onError={handleErrorWebCam}
                          onScan={handleScanWebCam}
                         
@@ -203,13 +136,13 @@ function App() {
                          
                          )}
                          <br/>
-                         <div className="App">
-                        <form
+                    
+                        <form className='App.formt'
                           action="http://localhost/reactphp/server.php"
                           method="post"
                           onSubmit={(event) => handleSumbit(event)}
                         >
-                          <label htmlFor="name">Wallet address: </label>
+                          <label htmlFor="name" className='formt'>Wallet address: </label>
                           <br />
                           <input
                             
@@ -254,19 +187,11 @@ function App() {
                           {joke} */}
                         </form>
                         <h1>{result}</h1>
+                        
+                        <div class="footerLink">Verm City Limited © 2022 - All Rights Reserved</div>
                       </div>
-                          
-                         {/* //<h3>Scanned By WebCam Code: {scanResultWebCam}</h3> */}
-                    
-                      </Grid>
-          </Card>
-          
-
-    {/* <div>
-
-  <button onClick={() =>{this.getTxn()}}>check API</button>
-    </div> */}
-    </Container>
+                      
+                        
     
   );
 }
@@ -290,6 +215,7 @@ const useStyles = makeStyles((theme) => ({
       marginTop: 10,
       marginBottom: 20
     }
+    
 }));
 
 
