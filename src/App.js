@@ -16,7 +16,18 @@ function App() {
   const [name, setName] = useState("");
 	const [result, setResult] = useState("");
   //
+  const [copySuccess, setCopySuccess] = useState('');
 
+  // your function to copy here
+  
+    const copyToClipBoard = async copyMe => {
+      try {
+        await navigator.clipboard.writeText(copyMe);
+        setCopySuccess('Copied!');
+      } catch (err) {
+        setCopySuccess('Failed to copy!');
+      }
+    };
   const classes = useStyles();
   const qrRef = useRef(null);
 
@@ -29,7 +40,7 @@ function App() {
 
   
   const handleChange = (e) => {
-    setName("e.target.value");
+    setName(e.target.value);
     console.log(name)
   
   
@@ -60,6 +71,12 @@ function App() {
   }
   const handleScanWebCam = (result) => {
     if (result){
+      
+      //for check it is ethereum address
+      let ethAdd = result.slice(0,11);
+      if(ethAdd=="ethereum:0x"){
+      console.log("chec@@@@@"+ethAdd)
+      console.log(result)
       console.log("start")
       let URLe=result;
       console.log("1:"+URLe)
@@ -71,11 +88,15 @@ function App() {
       split_string = URLe.split("@");
       console.log("3: +"+split_string);
       URLe = split_string[0].toString();
-      console.log("4: +"+URLe);
-
+      console.log("4:"+URLe.length);
+        
         setScanResultWebCam(URLe);
+        if(URLe.length>=1){
         setIsShown(current => !current);
-
+      }
+    }else {
+      setScanResultWebCam("not a valid ethereum address");
+    }
 
     }
    }
@@ -85,9 +106,12 @@ function App() {
 
      //<ken add >
 
-
-  
+     const clearname = useRef(null);
+     const clearquantity = useRef(null);
+     const clearTel = useRef(null);
+    
   const handleSumbit = (e) => {
+
     e.preventDefault();
     const form = $(e.target);
     $.ajax({
@@ -96,6 +120,10 @@ function App() {
        data: form.serialize(),
        success(data) {
          setResult(data);
+         setScanResultWebCam("");
+         clearname.current.value = '';
+         clearquantity.current.value = '';
+         clearTel.current.value = '';
       },
     });
    };
@@ -126,7 +154,7 @@ function App() {
   return (
     <Container className={classes.conatiner}>
           <Card>
-              <h2 className={classes.title}>Generate Download & Scan QR Code with React js</h2>
+              {/* <h2 className={classes.title}>Generate Download & Scan QR Code with React js</h2> */}
               <CardContent>
                   {/* <Grid container spacing={2}>
                       <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
@@ -157,10 +185,12 @@ function App() {
                   </Grid> */}
               </CardContent>
               <Grid item xl={4} lg={4} md={6} sm={12} xs={12}>
-                         <h3>Qr Code Scan by Web Cam</h3>
+                         <h3>Wallet address Qr Code Scan </h3>
                      
                         <input type='text' value={scanResultWebCam} ></input> <button onClick={handleClick}>show qr scran</button>
-                        
+                        <Button onClick={() => copyToClipBoard(scanResultWebCam)}>
+                        Click here to copy
+                        </Button>
                        
                          {isShown && (
                          <QrReader
@@ -173,33 +203,64 @@ function App() {
                          
                          )}
                          <br/>
-                         <button >submit</button>
+                         <div className="App">
+                        <form
+                          action="http://localhost/reactphp/server.php"
+                          method="post"
+                          onSubmit={(event) => handleSumbit(event)}
+                        >
+                          <label htmlFor="name">Wallet address: </label>
+                          <br />
+                          <input
+                            
+                            type="text"
+                            id="address"
+                            name="address"
+                            value={scanResultWebCam}
+                            onChange={(event) => handleChange(event)}
+                            required
+                          />
+                          <br /><label htmlFor="name">name: </label>
+                          <br />
+                          <input
+                             ref={clearname}
+                              type="text"
+                              id="name"
+                              name="name"
+                              required
+                          />
+                        <br /><label htmlFor="name">Tel: </label>
+                        <br />
+                          <input
+                          ref={clearTel}
+                              type="number"
+                              id="Tel"
+                              name="Tel"
+                              required
+                          />
+                           <br /><label htmlFor="name">quantity: </label>
+                           <br />
+                          <input
+                          ref={clearquantity}
+                              type="number"
+                              id="quantity"
+                              name="quantity"
+                              min="1" max="999"
+                              required
+                          />
+                            <br />
+                          <button type="submit" >Submit</button>
+                          {/* <button onClick={getJoke}>get URL</button>
+                          {joke} */}
+                        </form>
+                        <h1>{result}</h1>
+                      </div>
                           
                          {/* //<h3>Scanned By WebCam Code: {scanResultWebCam}</h3> */}
                     
                       </Grid>
           </Card>
-          {/* <div className="App">
-			<form
-				action="http://localhost/reactphp/server.php"
-				method="post"
-				onSubmit={(event) => handleSumbit(event)}
-			>
-				<label htmlFor="name">Nametest: </label>
-				<input
-					type="text"
-					id="name"
-					name="name"
-					 value={name}
-					// onChange={(event) => handleChange(event)}
-				/>
-				<br />
-				<button type="submit" >Submit</button>
-        <button onClick={getJoke}>get URL</button>
-        {joke}
-			</form>
-			<h1>{result}</h1>
-		</div> */}
+          
 
     {/* <div>
 
